@@ -1880,8 +1880,10 @@ int32_t write_ecm_answer(struct s_reader *reader, ECM_REQUEST *er, int8_t rc, ui
 								}
 								else
 								{
-									cs_log_dbg(D_TRACE,"NANO%02d: not fixing the crc of this cw since its still encrypted!", nano);
-									break; // crc failed so stop!
+									cs_log_dbg(D_TRACE,"BAD PEER DETECTED, oscam has fixed the last cw crc that wasn't matching!");
+									cw[i + 3] = c; // fix the last controlword
+									//cs_log_dbg(D_TRACE,"NANO%02d: not fixing the crc of this cw since its still encrypted!", nano);
+									//break; // crc failed so stop!
 								}
 							}
 						}
@@ -1921,8 +1923,8 @@ int32_t write_ecm_answer(struct s_reader *reader, ECM_REQUEST *er, int8_t rc, ui
 				cs_hexdump(0, er->ecmd5, 16, ecmd5s, sizeof(ecmd5s));
 				if(reader->dropbadcws)
 				{
-					rc = E_NOTFOUND;
-					rcEx = E2_WRONG_CHKSUM;
+					//rc = E_NOTFOUND;
+					//rcEx = E2_WRONG_CHKSUM;
 					cs_log("Probably got bad CW from reader: %s, caid %04X, srvid %04X (%s) - dropping CW, lg: %i", reader->label, er->caid, er->srvid, ecmd5s
 #ifdef CS_CACHEEX_AIO
 						, er->localgenerated);
@@ -1953,8 +1955,8 @@ int32_t write_ecm_answer(struct s_reader *reader, ECM_REQUEST *er, int8_t rc, ui
 		if(!er->localgenerated)
 		{
 #endif
-			rc = E_NOTFOUND;
-			rcEx = E2_WRONG_CHKSUM;
+			//rc = E_NOTFOUND;
+			//rcEx = E2_WRONG_CHKSUM;
 			cs_log_dbg(D_CACHEEX | D_CWC | D_LB, "{client %s, caid %04X, srvid %04X} [write_ecm_answer] cyclecheck failed! Reader: %s set rc: %i", (er->client ? er->client->account->usr : "-"), er->caid, er->srvid, reader ? reader->label : "-", rc);
 
 #ifdef CS_CACHEEX_AIO
